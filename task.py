@@ -109,3 +109,7 @@ def main():
         send_to_wecom_text(reback, wecom_id, AgentId, Secret)
     except KeyError as e:
         return f'环境变量获取错误：{e}'
+
+
+if __name__ == '__main__':
+    main()
