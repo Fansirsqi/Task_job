@@ -1,0 +1,25 @@
+
+## 禁止随便提issue
+
+name: Issue Checker
+# 运行的工作流名称（在列表展示）
+run-name: ${{ github.actor }} Bot Issue Checker
+
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check issue actor
+      uses: fluttercandies/no-free-usage-action@v1.10.0
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        forked:	'--no-forked'
+        starred: '--no-starred'
+        words: '抱歉！ 本分支暂不支持未 star/fork 提交issue <br> Sorry! This branch does not currently support submitting issues without star/fork'
