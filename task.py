@@ -10,8 +10,11 @@ new Env('吾爱破解签到');
 """
 import json
 import os
+import smtplib
 import sys
 import urllib.parse
+from email.header import Header
+from email.mime.text import MIMEText
 
 import requests
 from bs4 import BeautifulSoup
@@ -100,15 +103,71 @@ def send_to_wecom_text(text, wecom_cid, wecom_aid, wecom_secret, wecom_touid='@a
         return False
 
 
+class EmailAlerts:
+    # 邮箱域名，这里用的QQ邮箱发送
+    host = 'smtp.qq.com'
+    # port = 25  #或者使用默认的端口号25
+    # 发送者邮箱账号
+    username = '2595741568@qq.com'
+    # 授权码 注意，此处必须填写授权码，不同邮件的获取方法大体相同，参考百度。
+    password = 'kagpnieqfgpoebag'
+    # 接收者邮箱账号,多个接收者，构造list即可。
+    to_addrs = ['2104898527@qq.com']
+
+    @staticmethod
+    def set_email_text(to_addrs: list, text: str, hder: str, sender: str):
+        """
+        :param to_addrs:收件人列表
+        :param text: 正文
+        :param hder: 邮件标题
+        :param sender: 发件人
+        """
+        # 以下是构造证明，邮件主题、发送者姓名、接收者姓名等。
+        msg = MIMEText(text, "plain", 'utf-8')
+        msg['Subject'] = Header(hder)
+        msg['From'] = Header(sender)  # 发件人
+        msg['To'] = Header(','.join(to_addrs))
+        return msg
+
+    # 如需抄送，可使用Cc进行抄送
+    # msg['Cc'] = Header(','.join(to_addrs))
+    def send_email(self, msgx):
+        # 创建SMTP对象
+        server = smtplib.SMTP_SSL(self.host)
+        # 设置发件人邮箱的域名和端口，端口地址为25
+        server.connect(self.host, 465)
+        # 登录邮箱，传递参数1：邮箱地址，参数2：邮箱授权码
+        server.login(self.username, self.password)
+        try:
+            print('开始发送')
+            # 发送邮件，传递参数1：发件人邮箱地址，参数2：收件人邮箱地址，参数3：把邮件内容格式改为str
+            server.sendmail(self.username, self.to_addrs, msgx.as_string())
+            print('邮件发送成功')
+        except EOFError as error:
+            print(error)
+        # 关闭SMTP对象
+        server.quit()
+
+
 def main():
+    obj = EmailAlerts()
     try:
         wecom_id = os.environ.get("wecom_id")
         AgentId = os.environ.get("AgentId")
         Secret = os.environ.get("Secret")
         reback = do_task()
-        send_to_wecom_text(reback, wecom_id, AgentId, Secret)
-    except KeyError as e:
-        return f'环境变量获取错误：{e}'
+        _msg = obj.set_email_text(to_addrs=['guiqi_0304@foxmail.com'], text=reback, hder='Task_反馈',
+                                  sender='签到机器人')
+        try:
+            obj.send_email(_msg)
+        except Exception as f:
+            print(f)
+        try:
+            send_to_wecom_text(reback, wecom_id, AgentId, Secret)
+        except Exception as e:
+            print(e)
+    except KeyError as g:
+        return f'环境变量获取错误：{g}'
 
 
 if __name__ == '__main__':
