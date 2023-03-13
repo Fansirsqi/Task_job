@@ -155,10 +155,11 @@ def main():
         wecom_id = os.environ.get("WECOM_ID")
         AgentId = os.environ.get("AGENTID")
         Secret = os.environ.get("SECRET")
-        emails = os.environ.get('EMAIL').split(';')
+
         reback = do_task()
-        print(reback, emails)
-        _msg = obj.set_email_text(to_addrs=emails, text=reback, hder='Task_反馈',
+        _msg = obj.set_email_text(to_addrs=['guiqi_0304@foxmail.com', '2104898527@qq.com'],
+                                  text=reback,
+                                  hder='Task_反馈',
                                   sender='签到机器人')
         try:
             obj.send_email(_msg)
