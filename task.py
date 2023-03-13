@@ -155,7 +155,6 @@ def main():
         wecom_id = os.environ.get("WECOM_ID")
         AgentId = os.environ.get("AGENTID")
         Secret = os.environ.get("SECRET")
-
         reback = do_task()
         _msg = obj.set_email_text(to_addrs=['guiqi_0304@foxmail.com', '2104898527@qq.com'],
                                   text=reback,
