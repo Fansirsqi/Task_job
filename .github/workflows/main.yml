@@ -32,6 +32,6 @@ jobs:
 
     env:
       COOKIE: ${{ secrets.COOKIE }}
-      WECOM_ID: ${{ secrets.wecom_id }}
-      AGENTID: ${{ secrets.AgentId }}
-      SECRET: ${{ secrets.Secret }}
+      wecom_id: ${{ secrets.wecom_id }}
+      AgentId: ${{ secrets.AgentId }}
+      Secret: ${{ secrets.Secret }}

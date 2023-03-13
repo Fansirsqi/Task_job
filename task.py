@@ -152,8 +152,8 @@ class EmailAlerts:
 def main():
     obj = EmailAlerts()
     try:
-        wecom_id = os.environ.get("WECOM_ID")
-        AgentId = os.environ.get("AGENTID")
+        wecom_id = os.environ.get("wecom_id")
+        AgentId = os.environ.get("AgentId")
         Secret = os.environ.get("SECRET")
         reback = do_task()
         _msg = obj.set_email_text(to_addrs=['guiqi_0304@foxmail.com', '2104898527@qq.com'],
