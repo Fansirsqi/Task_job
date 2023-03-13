@@ -55,31 +55,43 @@ def do_task():
             "Cookie": cookie,
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
         }
-        r = requests.get(url1, headers=headers, allow_redirects=False)
-        s_cookie = r.headers['Set-Cookie']
-        cookie = cookie + s_cookie
-        headers['Cookie'] = cookie
-        r = requests.get(url2, headers=headers, allow_redirects=False)
-        s_cookie = r.headers['Set-Cookie']
-        cookie = cookie + s_cookie
-        headers['Cookie'] = cookie
-        r = requests.get(url3, headers=headers)
-        r_data = BeautifulSoup(r.text, "html.parser")
-        jx_data = r_data.find("div", id="messagetext").find("p").text
-        print(jx_data)
-        if "您需要先登录才能继续本操作" in jx_data:
-            print(f"第{n}个账号Cookie 失效")
-            message = f"第{n}个账号Cookie 失效"
-        elif "恭喜" in jx_data:
-            print(f"第{n}个账号签到成功")
-            message = f"第{n}个账号签到成功"
-        elif "不是进行中的任务" in jx_data:
-            print(f"第{n}个账号今日已签到")
-            message = f"第{n}个账号今日已签到"
-        else:
-            print(f"第{n}个账号签到失败")
-            message = f"第{n}个账号签到失败"
-        return message
+        try:
+            print('开始执行1')
+            r = requests.get(url1, headers=headers, allow_redirects=False)
+            s_cookie = r.headers['Set-Cookie']
+            cookie = cookie + s_cookie
+            headers['Cookie'] = cookie
+        except requests.exceptions.RequestException as e:
+            print(e)
+        try:
+            print('开始执行2')
+            r = requests.get(url2, headers=headers, allow_redirects=False)
+            s_cookie = r.headers['Set-Cookie']
+            cookie = cookie + s_cookie
+            headers['Cookie'] = cookie
+        except requests.exceptions.RequestException as e:
+            print(e)
+        try:
+            print('开始执行3')
+            r = requests.get(url3, headers=headers)
+            r_data = BeautifulSoup(r.text, "html.parser")
+            jx_data = r_data.find("div", id="messagetext").find("p").text
+            print(jx_data)
+            if "您需要先登录才能继续本操作" in jx_data:
+                print(f"第{n}个账号Cookie 失效")
+                message = f"第{n}个账号Cookie 失效"
+            elif "恭喜" in jx_data:
+                print(f"第{n}个账号签到成功")
+                message = f"第{n}个账号签到成功"
+            elif "不是进行中的任务" in jx_data:
+                print(f"第{n}个账号今日已签到")
+                message = f"第{n}个账号今日已签到"
+            else:
+                print(f"第{n}个账号签到失败")
+                message = f"第{n}个账号签到失败"
+            return message
+        except requests.exceptions.RequestException as e:
+            print(e)
 
 
 def send_to_wecom_text(text, wecom_cid, wecom_aid, wecom_secret, wecom_touid='@all'):
@@ -154,7 +166,8 @@ def main():
     try:
         wecom_id = os.environ.get("wecom_id")
         AgentId = os.environ.get("AgentId")
-        Secret = os.environ.get("SECRET")
+        Secret = os.environ.get("Secret")
+        print('debug', wecom_id, AgentId, Secret)
         reback = do_task()
         _msg = obj.set_email_text(to_addrs=['guiqi_0304@foxmail.com', '2104898527@qq.com'],
                                   text=reback,
