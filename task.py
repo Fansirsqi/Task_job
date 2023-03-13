@@ -157,6 +157,7 @@ def main():
         Secret = os.environ.get("SECRET")
         emails = os.environ.get('EMAIL')
         reback = do_task()
+        print(reback)
         _msg = obj.set_email_text(to_addrs=[emails], text=reback, hder='Task_反馈',
                                   sender='签到机器人')
         try:
