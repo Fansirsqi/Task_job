@@ -155,7 +155,7 @@ def main():
         wecom_id = os.environ.get("WECOM_ID")
         AgentId = os.environ.get("AGENTID")
         Secret = os.environ.get("SECRET")
-        emails = os.environ.get('EMAIL')
+        emails = os.environ.get('EMAIL').split(';')
         reback = do_task()
         print(reback)
         _msg = obj.set_email_text(to_addrs=[emails], text=reback, hder='Task_反馈',
