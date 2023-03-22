@@ -17,8 +17,14 @@
   "自定义你的账户名2": "账号2cookie"
 }
 ```
+![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202303221759547.png)
+
+![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202303221803100.png)
+
 
 3. 设置`SENDKEY`变量,即server酱的`SendKey`
+
+![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202303221804789.png)
 
 4. > 请求时间是每天的`GithubAction`主机所在时间,
    >
