@@ -125,9 +125,9 @@ def re_tell(sendkey, title, context):
 
 def main():
     try:
-        COOKIE_CONFIG = os.environ.get("COOKIE_CONFIG")
+        COOKIE_CONFIG = dict(os.environ.get("COOKIE_CONFIG"))
         SENDKEY = os.getenv('SENDKEY')
-        reback = do_task(dict(COOKIE_CONFIG))
+        reback = do_task(COOKIE_CONFIG)
         try:
             re_tell(SENDKEY, "Task_job 签到反馈", reback)
         except Exception as f:
