@@ -125,7 +125,7 @@ def re_tell(sendkey, title, context):
 
 def main():
     try:
-        COOKIE_CONFIG = dict(os.environ.get("COOKIE_CONFIG"))
+        COOKIE_CONFIG = eval(os.environ.get("COOKIE_CONFIG"))
         SENDKEY = os.getenv('SENDKEY')
         reback = do_task(COOKIE_CONFIG)
         try:
@@ -139,4 +139,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # re_tell()
