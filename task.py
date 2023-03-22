@@ -127,10 +127,6 @@ def main():
     try:
         COOKIE_CONFIG = os.environ.get("COOKIE_CONFIG")
         SENDKEY = os.getenv('SENDKEY')
-        # COOKIE_CONFIG = {
-        #     "52fansir": '__bid_n=186d9364907ab0a9064207; __gads=ID=45d824533a011689-224d46e304dc00ef:T=1679060236:RT=1679060236:S=ALNI_Mag6NyinADgXK2bWY1gxueR9gjS7Q; __gpi=UID=00000bdaf31daf3d:T=1679060236:RT=1679060236:S=ALNI_MYkNyunOCVi8P8UGFq7z2SLeqVPqg; wzws_sessionid=oGQawASCZGIxY2FhgDE4Mi4xMDEuNTAuNzKBMmNlMWZk; htVC_2132_saltkey=S4RNy494; htVC_2132_lastvisit=1679461538; FPTOKEN=V12NFba4I07OJ9VKBmqcnOqiX/B4/MgzUsto+rCrdm0r+ufBm2nub9StjN5R2UpqKx1IGFF6zoPFlq5mFXo9aiB8ceqVkMV1yXTAumrtYXFFqqZKw1VqaKFtYZZld48vj9pbNBfXWWDispK68hBPB6zcY67fUm550AYDK30XxKb7wJCRPK1wtH8X0pJGLvQMKmvs+N28o17NsSm+QyX/u3M1LP/bpIIbq+OdZQ7skim9jhx7prVH/wCt/VFtGKng8KKC7WOnx75bRBrMHdyS7aHLeAZMPleC6WUVtwASz/3Cvs78SlMnY/H9p4dhB0euyXKsflnuAQ5438mI+djlbpF/D2K3Abq5BivygY1N7W7S1JU8wPVBWmx+cMKswK2vlqyEuMFXnRomlqi3FxX58g==|DAiulhpqFfY4QhRsxAYFC6UWyc/sQj75iryHF0wS3js=|10|753308c369b0c7d3e9fcbfecb83b5ea4; Hm_lvt_46d556462595ed05e05f009cdafff31a=1678681125,1679060253,1679474714; htVC_2132_con_request_uri=https://www.52pojie.cn/connect.php?mod=login&op=callback&referer=index.php; htVC_2132_client_created=1679474740; htVC_2132_client_token=A3D04FDD5343BDFA3DC9E1BD489EB3CD; htVC_2132_ulastactivity=1679474740|0; htVC_2132_auth=bad1eZ4bfxxrgm1bsIZc3GZKxtVEXhz9biUFOi7izKDAQRC6/8lhZjW30KvKu5X8N7783FhlkvFpZQwBtyA0QCdfWsMD; htVC_2132_connect_login=1; htVC_2132_connect_is_bind=1; htVC_2132_connect_uin=A3D04FDD5343BDFA3DC9E1BD489EB3CD; htVC_2132_stats_qc_login=3; htVC_2132_sid=0; htVC_2132_ttask=1784647|20230322; htVC_2132_checkpm=1; htVC_2132_nofavfid=1; htVC_2132_noticonf=1784647D1D3_3_1; htVC_2132_st_p=1784647|1679474923|08daf66d6fbe04cf053f9c3c6f7869d8; htVC_2132_visitedfid=2D16D13; htVC_2132_viewid=tid_1761481; htVC_2132_lastcheckfeed=1784647|1679474925; Hm_lpvt_46d556462595ed05e05f009cdafff31a=1679474939; htVC_2132_lastact=1679474964	forum.php	'
-        # }
-        # SENDKEY = 'SCT197631TBnI6FamOszhOjUbMDEHt69Cy'
         reback = do_task(COOKIE_CONFIG)
         try:
             re_tell(SENDKEY, "Task_job 签到反馈", reback)
