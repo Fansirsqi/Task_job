@@ -17,10 +17,10 @@
   "自定义你的账户名2": "账号2cookie"
 }
 ```
+
 ![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202303221759547.png)
 
 ![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202303221803100.png)
-
 
 3. 设置`SENDKEY`变量,即server酱的`SendKey`
 
@@ -34,5 +34,19 @@
    >
    > 所以第二天的7点59左右,大概是,这个多少会有延迟
 
+<center>
+<h2>运行结果:</h2>
 
+![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202303221816356.png)
 
+<h2>手机上收到的样式:</h2>
+
+![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202303221819697.png)
+
+![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202303221817700.png)
+
+<h2>至于为什么是这样:</h2>
+
+![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202303221818476.png)
+
+</center>
