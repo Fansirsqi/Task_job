@@ -24,14 +24,12 @@ jobs:
           python-version: '3.11'
       #      关键字告诉作业在运行器上执行命令。在这种情况下，您正在使用安装软件测试包。
       - run: pip install --upgrade pip
-      - run: ifconfig
-      #      运行一条shell命令试试
+#      - run: ifconfig
+      #      #      运行一条shell命令试试
       - run: pip install -r requirements.txt
       - run: python task.py
     #      - run: python PORD_Continuity/APS.py
 
     env:
-      COOKIE: ${{ secrets.COOKIE }}
-      wecom_id: ${{ secrets.wecom_id }}
-      AgentId: ${{ secrets.AgentId }}
-      Secret: ${{ secrets.Secret }}
+      COOKIE_CONFIG: ${{ secrets.COOKIE_CONFIG }}
+      SENDKEY: ${{ secrets.SENDKEY }}
