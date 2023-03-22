@@ -8,29 +8,19 @@ Date: 2023/2/4 08:00
 cron: 30 7 * * *
 new Env('吾爱破解签到');
 """
-import json
 import os
-import smtplib
 import sys
 import urllib.parse
-from email.header import Header
-from email.mime.text import MIMEText
 
 import requests
 from bs4 import BeautifulSoup
 
 
-def do_task():
-    # 多cookie使用&分割
-    try:
-        cookies = os.environ.get("COOKIE")
-    except KeyError as e:
-        print(f"请在环境变量填写COOKIE的值{e}")
-        sys.exit()
+def do_task(COOKIE_CONFIG: dict):
     url1 = "https://www.52pojie.cn/CSPDREL2hvbWUucGhwP21vZD10YXNrJmRvPWRyYXcmaWQ9Mg==?wzwscspd=MC4wLjAuMA=="
     url2 = 'https://www.52pojie.cn/home.php?mod=task&do=apply&id=2&referer=%2F'
     url3 = 'https://www.52pojie.cn/home.php?mod=task&do=draw&id=2'
-    for n, cookie in enumerate(cookies.split("&"), start=1):
+    for user_name, cookie in COOKIE_CONFIG.items():
         cookie = urllib.parse.unquote(cookie)
         cookie_list = cookie.split(";")
         cookie = ''
@@ -44,7 +34,7 @@ def do_task():
                           urllib.parse.quote(i.split("=")[1]) + ";"
 
         if 'htVC_2132_saltkey' not in cookie and 'htVC_2132_auth' not in cookie:
-            print("第{n}cookie中未包含htVC_2132_saltkey或htVC_2132_auth字段，请检查cookie")
+            print("第{count}cookie中未包含htVC_2132_saltkey或htVC_2132_auth字段，请检查cookie")
             sys.exit()
         headers = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -78,112 +68,79 @@ def do_task():
             jx_data = r_data.find("div", id="messagetext").find("p").text
             print(jx_data)
             if "您需要先登录才能继续本操作" in jx_data:
-                print(f"第{n}个账号Cookie 失效")
-                message = f"第{n}个账号Cookie 失效"
+                print(f"账号:{user_name}  Cookie 失效")
+                message = f"## 账号:{user_name}  Cookie 失效"
             elif "恭喜" in jx_data:
-                print(f"第{n}个账号签到成功")
-                message = f"第{n}个账号签到成功"
+                print(f"账号:{user_name}  签到成功")
+                message = f"## 账号:{user_name}  签到成功"
             elif "不是进行中的任务" in jx_data:
-                print(f"第{n}个账号今日已签到")
-                message = f"第{n}个账号今日已签到"
+                print(f"账号:{user_name}  今日已签到")
+                message = f"## 账号:{user_name}  今日已签到"
             else:
-                print(f"第{n}个账号签到失败")
-                message = f"第{n}个账号签到失败"
+                print(f"账号:{user_name}  签到失败")
+                message = f"## 账号:{user_name}  签到失败"
             return message
         except requests.exceptions.RequestException as e:
             print(e)
 
 
-def send_to_wecom_text(text, wecom_cid, wecom_aid, wecom_secret, wecom_touid='@all'):
-    get_token_url = f"https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={wecom_cid}&corpsecret={wecom_secret}"
-    response = requests.get(get_token_url).content
-    access_token = json.loads(response).get('access_token')
-    if access_token and len(access_token) > 0:
-        send_msg_url = f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={access_token}'
-        data = {
-            "touser": wecom_touid,
-            "agentid": wecom_aid,
-            "msgtype": "text",
-            "text": {
-                "content": text
-            },
-            "duplicate_check_interval": 600
-        }
-        response = requests.post(send_msg_url, data=json.dumps(data)).content
-        return response
-    else:
-        return False
-
-
-class EmailAlerts:
-    # 邮箱域名，这里用的QQ邮箱发送
-    host = 'smtp.qq.com'
-    # port = 25  #或者使用默认的端口号25
-    # 发送者邮箱账号
-    username = '2595741568@qq.com'
-    # 授权码 注意，此处必须填写授权码，不同邮件的获取方法大体相同，参考百度。
-    password = 'kagpnieqfgpoebag'
-    # 接收者邮箱账号,多个接收者，构造list即可。
-    to_addrs = ['2104898527@qq.com']
-
-    @staticmethod
-    def set_email_text(to_addrs: list, text: str, hder: str, sender: str):
-        """
-        :param to_addrs:收件人列表
-        :param text: 正文
-        :param hder: 邮件标题
-        :param sender: 发件人
-        """
-        # 以下是构造证明，邮件主题、发送者姓名、接收者姓名等。
-        msg = MIMEText(text, "plain", 'utf-8')
-        msg['Subject'] = Header(hder)
-        msg['From'] = Header(sender)  # 发件人
-        msg['To'] = Header(','.join(to_addrs))
-        return msg
-
-    # 如需抄送，可使用Cc进行抄送
-    # msg['Cc'] = Header(','.join(to_addrs))
-    def send_email(self, msgx):
-        # 创建SMTP对象
-        server = smtplib.SMTP_SSL(self.host)
-        # 设置发件人邮箱的域名和端口，端口地址为25
-        server.connect(self.host, 465)
-        # 登录邮箱，传递参数1：邮箱地址，参数2：邮箱授权码
-        server.login(self.username, self.password)
+def re_tell(sendkey, title, context):
+    data = {
+        "title": title,
+        "desp": context,
+        "short": "",
+        "channel": "9"
+    }
+    # 动态指定本次推送使用的消息通道，选填。如不指定，
+    # 则使用网站上的消息通道页面设置的通道。
+    # 支持最多两个通道，多个通道值用竖线|隔开。
+    # 比如，同时发送服务号和企业微信应用消息通道，则使用 9|66 。
+    # 通道对应的值如下：
+    # 方糖服务号=9
+    # 企业微信应用消息=66
+    # Bark iOS=8
+    # 企业微信群机器人=1
+    # 钉钉群机器人=2
+    # 飞书群机器人=3
+    # 测试号=0
+    # 自定义=88
+    # PushDeer=18
+    # 官方Android版·β=98
+    headers = {
+        'Content-type': 'application/json'
+    }
+    url = f'https://sctapi.ftqq.com/{sendkey}.send'
+    while True:
         try:
-            print('开始发送')
-            # 发送邮件，传递参数1：发件人邮箱地址，参数2：收件人邮箱地址，参数3：把邮件内容格式改为str
-            server.sendmail(self.username, self.to_addrs, msgx.as_string())
-            print('邮件发送成功')
-        except EOFError as error:
-            print(error)
-        # 关闭SMTP对象
-        server.quit()
+            r = requests.post(url=url, headers=headers, json=data).json()
+            print(f"Server酱推送结果:{r['data']['error']}")
+            # 一般返回 SUCCESS 就是成功了
+            # pushid = r['data']['pushid']
+            # readkey = r['data']['readkey']
+            # print(f'查询推送结果请访问: https://sctapi.ftqq.com/push?id={pushid}&readkey={readkey}')
+            break
+        except requests.exceptions.ConnectionError as e:
+            print(f'ConnectionError:{e}')
 
 
 def main():
-    obj = EmailAlerts()
     try:
-        wecom_id = os.environ.get("wecom_id")
-        AgentId = os.environ.get("AgentId")
-        Secret = os.environ.get("Secret")
-        print('debug', wecom_id, AgentId, Secret)
-        reback = do_task()
-        _msg = obj.set_email_text(to_addrs=['guiqi_0304@foxmail.com', '2104898527@qq.com'],
-                                  text=reback,
-                                  hder='Task_反馈',
-                                  sender='签到机器人')
+        COOKIE_CONFIG = os.environ.get("COOKIE_CONFIG")
+        SENDKEY = os.getenv('SENDKEY')
+        # COOKIE_CONFIG = {
+        #     "52fansir": '__bid_n=186d9364907ab0a9064207; __gads=ID=45d824533a011689-224d46e304dc00ef:T=1679060236:RT=1679060236:S=ALNI_Mag6NyinADgXK2bWY1gxueR9gjS7Q; __gpi=UID=00000bdaf31daf3d:T=1679060236:RT=1679060236:S=ALNI_MYkNyunOCVi8P8UGFq7z2SLeqVPqg; wzws_sessionid=oGQawASCZGIxY2FhgDE4Mi4xMDEuNTAuNzKBMmNlMWZk; htVC_2132_saltkey=S4RNy494; htVC_2132_lastvisit=1679461538; FPTOKEN=V12NFba4I07OJ9VKBmqcnOqiX/B4/MgzUsto+rCrdm0r+ufBm2nub9StjN5R2UpqKx1IGFF6zoPFlq5mFXo9aiB8ceqVkMV1yXTAumrtYXFFqqZKw1VqaKFtYZZld48vj9pbNBfXWWDispK68hBPB6zcY67fUm550AYDK30XxKb7wJCRPK1wtH8X0pJGLvQMKmvs+N28o17NsSm+QyX/u3M1LP/bpIIbq+OdZQ7skim9jhx7prVH/wCt/VFtGKng8KKC7WOnx75bRBrMHdyS7aHLeAZMPleC6WUVtwASz/3Cvs78SlMnY/H9p4dhB0euyXKsflnuAQ5438mI+djlbpF/D2K3Abq5BivygY1N7W7S1JU8wPVBWmx+cMKswK2vlqyEuMFXnRomlqi3FxX58g==|DAiulhpqFfY4QhRsxAYFC6UWyc/sQj75iryHF0wS3js=|10|753308c369b0c7d3e9fcbfecb83b5ea4; Hm_lvt_46d556462595ed05e05f009cdafff31a=1678681125,1679060253,1679474714; htVC_2132_con_request_uri=https://www.52pojie.cn/connect.php?mod=login&op=callback&referer=index.php; htVC_2132_client_created=1679474740; htVC_2132_client_token=A3D04FDD5343BDFA3DC9E1BD489EB3CD; htVC_2132_ulastactivity=1679474740|0; htVC_2132_auth=bad1eZ4bfxxrgm1bsIZc3GZKxtVEXhz9biUFOi7izKDAQRC6/8lhZjW30KvKu5X8N7783FhlkvFpZQwBtyA0QCdfWsMD; htVC_2132_connect_login=1; htVC_2132_connect_is_bind=1; htVC_2132_connect_uin=A3D04FDD5343BDFA3DC9E1BD489EB3CD; htVC_2132_stats_qc_login=3; htVC_2132_sid=0; htVC_2132_ttask=1784647|20230322; htVC_2132_checkpm=1; htVC_2132_nofavfid=1; htVC_2132_noticonf=1784647D1D3_3_1; htVC_2132_st_p=1784647|1679474923|08daf66d6fbe04cf053f9c3c6f7869d8; htVC_2132_visitedfid=2D16D13; htVC_2132_viewid=tid_1761481; htVC_2132_lastcheckfeed=1784647|1679474925; Hm_lpvt_46d556462595ed05e05f009cdafff31a=1679474939; htVC_2132_lastact=1679474964	forum.php	'
+        # }
+        # SENDKEY = 'SCT197631TBnI6FamOszhOjUbMDEHt69Cy'
+        reback = do_task(COOKIE_CONFIG)
         try:
-            obj.send_email(_msg)
+            re_tell(SENDKEY, "Task_job 签到反馈", reback)
         except Exception as f:
-            print(f)
-        try:
-            send_to_wecom_text(reback, wecom_id, AgentId, Secret)
-        except Exception as e:
-            print(e)
+            print(f'SERVER酱推送失败{f}')
     except KeyError as g:
         return f'环境变量获取错误：{g}'
+        sys.exit()
 
 
 if __name__ == '__main__':
     main()
+    # re_tell()
