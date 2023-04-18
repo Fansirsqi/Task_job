@@ -8,6 +8,7 @@ Date: 2023/2/4 08:00
 cron: 30 7 * * *
 new Env('吾爱破解签到');
 """
+import json
 import os
 import sys
 import urllib.parse
@@ -84,7 +85,7 @@ def do_task(COOKIE_CONFIG: dict):
             print(e)
 
 
-def re_tell(sendkey, title, context):
+def server_chan(sendkey, title, context):
     data = {
         "title": title,
         "desp": context,
@@ -123,18 +124,46 @@ def re_tell(sendkey, title, context):
             print(f'ConnectionError:{e}')
 
 
+def wx_pusher(wxpuser_token, uids, msg):
+    url = "https://wxpusher.zjiecode.com/api/send/message"
+    payload = json.dumps({
+        "appToken": f"{wxpuser_token}",
+        "content": f"{msg}",
+        "summary": f"{msg}",
+        "contentType": 1,
+        "uids": uids,
+        "url": "https://wxpusher.zjiecode.com",
+        "verifyPay": False
+    })
+    headers = {
+        'User-Agent': 'Apifox/1.0.0 (https://www.apifox.cn)',
+        'Content-Type': 'application/json'
+    }
+
+    requests.request("POST", url, headers=headers, data=payload)
+
+
 def main():
     try:
         COOKIE_CONFIG = eval(os.environ.get("COOKIE_CONFIG"))
-        SENDKEY = os.getenv('SENDKEY')
-        reback = do_task(COOKIE_CONFIG)
+        re_back = do_task(COOKIE_CONFIG)
         try:
-            re_tell(SENDKEY, "Task_job 签到反馈", reback)
-        except Exception as f:
-            print(f'SERVER酱推送失败{f}')
-    except KeyError as g:
-        return f'环境变量获取错误：{g}'
-        sys.exit()
+            SENDKEY = os.getenv('SENDKEY')
+            server_chan(SENDKEY, "Task_job 签到反馈", re_back)
+        except Exception as server_err:
+            msg = f'SERVER酱推送失败{server_err}'
+            print(msg)
+        try:
+            WX_TOKEN = os.getenv('WX_TOKEN')
+            UIDS = os.getenv('UIDS').split(',')  # UID 用‘，’分割
+            wx_pusher(WX_TOKEN, UIDS, re_back)
+        except Exception as wx_puser_err:
+            msg = f'WX_PUSHER推送失败{wx_puser_err}'
+            print(msg)
+    except KeyError as wuai_err:
+        msg = f'吾爱Token 环境变量获取错误：{wuai_err}'
+        print(msg)
+        return msg
 
 
 if __name__ == '__main__':
