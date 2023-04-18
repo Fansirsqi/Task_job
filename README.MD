@@ -1,3 +1,37 @@
+## update 2023-04-18
+
+- 新增收费暂时没那么严格的`WxPusher`推送，免费额度足够造
+
+- 新增环境变量服务于`WxPusher`
+	- `WX_TOKEN` 
+	
+	- `UIDS` 
+	
+
+![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202304181842177.png)
+
+#### [获取`appToken`](https://wxpusher.zjiecode.com/docs/#/?id=获取apptoken)
+
+在你创建应用的过程中，你应该已经看到`appToken`，如果没有保存，可以通过下面的方式重制它。
+
+打开应用的后台https://wxpusher.zjiecode.com/admin/，从左侧菜单栏，找到`appToken`菜单，在这里，你可以重置`appToken`，请注意，重置后，老的`appToken`会立即失效，调用接口会失败。
+
+![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202304181838504.png)
+
+#### [扫码关注应用](https://wxpusher.zjiecode.com/docs/#/?id=扫码关注应用)
+
+创建应用以后，你可以看到应用的应用码和关注链接，你可以让你的用户通过下面2种方式来关注你的应用，关注你的应用以后，你就可以给他发送消息了。
+
+![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202304181838724.png)
+
+#### [获取UID](https://wxpusher.zjiecode.com/docs/#/?id=获取uid)
+
+目前有3种方式获取`UID`：
+
+1. 关注公众号：`wxpusher`，然后点击「我的」-「我的`UID`」查询到`UID`；
+2. 通过[创建参数二维码](https://wxpusher.zjiecode.com/docs/#/?id=create-qrcode)接口创建一个定制的二维码，用户扫描此二维码后，会通过[用户关注回调](https://wxpusher.zjiecode.com/docs/#/?id=subscribe-callback)把`UID`推送给你；
+3. 通过[创建参数二维码](https://wxpusher.zjiecode.com/docs/#/?id=create-qrcode)接口创建一个定制的二维码，然后用[查询扫码用户`UID`](https://wxpusher.zjiecode.com/docs/#/?id=query-uid)接口，查询扫描此二维码的用户`UID`；
+
 ## update 2023-03-22
 
 - 删除企业微信，邮箱通知，改用Server酱
