@@ -132,7 +132,6 @@ def wx_pusher(wxpuser_token, uids, msg):
         "summary": f"{msg}",
         "contentType": 3,
         "uids": uids,
-        "url": "https://wxpusher.zjiecode.com",
         "verifyPay": False
     })
     headers = {
@@ -158,17 +157,17 @@ def main():
             SENDKEY = os.getenv('SENDKEY')
             server_chan(SENDKEY, "Task_job 签到反馈", '##' + re_back)
         except Exception as server_err:
-            msg = f'SERVER酱推送失败{server_err}'
+            msg = f'🔴SERVER酱推送失败{server_err}'
             print(msg)
         try:
             WX_TOKEN = os.getenv('WX_TOKEN')
             UIDS = os.getenv('UIDS').split(',')  # UID 用‘，’分割
             wx_pusher(WX_TOKEN, UIDS, re_back)
         except Exception as wx_puser_err:
-            msg = f'WX_PUSHER推送失败{wx_puser_err}'
+            msg = f'🔴WX_PUSHER推送报错: {wx_puser_err}'
             print(msg)
     except KeyError as wuai_err:
-        msg = f'吾爱Token 环境变量获取错误：{wuai_err}'
+        msg = f'🔴吾爱Token 环境变量获取错误：{wuai_err}'
         print(msg)
         return msg
 
