@@ -47,7 +47,7 @@ def do_task(COOKIE_CONFIG: dict):
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
         }
         try:
-            print('开始执行1')
+            print('🚲开始执行')
             r = requests.get(url1, headers=headers, allow_redirects=False)
             s_cookie = r.headers['Set-Cookie']
             cookie = cookie + s_cookie
@@ -55,7 +55,7 @@ def do_task(COOKIE_CONFIG: dict):
         except requests.exceptions.RequestException as e:
             print(e)
         try:
-            print('开始执行2')
+            print('🏍️开始执行')
             r = requests.get(url2, headers=headers, allow_redirects=False)
             s_cookie = r.headers['Set-Cookie']
             cookie = cookie + s_cookie
@@ -63,23 +63,23 @@ def do_task(COOKIE_CONFIG: dict):
         except requests.exceptions.RequestException as e:
             print(e)
         try:
-            print('开始执行3')
+            print('🚀开始执行')
             r = requests.get(url3, headers=headers)
             r_data = BeautifulSoup(r.text, "html.parser")
             jx_data = r_data.find("div", id="messagetext").find("p").text
             print(jx_data)
             if "您需要先登录才能继续本操作" in jx_data:
-                print(f"账号:{user_name}  Cookie 失效")
-                message = f"## 账号:{user_name}  Cookie 失效"
+                print(f"🔴账号:{user_name}  Cookie 失效")
+                message = f" 账号:{user_name}  🔴Cookie 失效\n"
             elif "恭喜" in jx_data:
-                print(f"账号:{user_name}  签到成功")
-                message = f"## 账号:{user_name}  签到成功"
+                print(f"🟢账号:{user_name}  签到成功")
+                message = f" 账号:{user_name}  🟢签到成功\n"
             elif "不是进行中的任务" in jx_data:
-                print(f"账号:{user_name}  今日已签到")
-                message = f"## 账号:{user_name}  今日已签到"
+                print(f"🟡账号:{user_name}  今日已签到")
+                message = f" 账号:{user_name}  🟡今日已签到\n"
             else:
-                print(f"账号:{user_name}  签到失败")
-                message = f"## 账号:{user_name}  签到失败"
+                print(f"🔴账号:{user_name}  签到失败")
+                message = f" 账号:{user_name}  🔴签到失败\n"
             return message
         except requests.exceptions.RequestException as e:
             print(e)
@@ -114,7 +114,7 @@ def server_chan(sendkey, title, context):
     while True:
         try:
             r = requests.post(url=url, headers=headers, json=data).json()
-            print(f"Server酱推送结果:{r['data']['error']}")
+            print(f"🎁ServerChan推送结果:{r['data']['error']}")
             # 一般返回 SUCCESS 就是成功了
             # pushid = r['data']['pushid']
             # readkey = r['data']['readkey']
@@ -128,9 +128,9 @@ def wx_pusher(wxpuser_token, uids, msg):
     url = "https://wxpusher.zjiecode.com/api/send/message"
     payload = json.dumps({
         "appToken": f"{wxpuser_token}",
-        "content": f"{msg}",
+        "content": f"##{msg}",
         "summary": f"{msg}",
-        "contentType": 1,
+        "contentType": 3,
         "uids": uids,
         "url": "https://wxpusher.zjiecode.com",
         "verifyPay": False
@@ -139,8 +139,15 @@ def wx_pusher(wxpuser_token, uids, msg):
         'User-Agent': 'Apifox/1.0.0 (https://www.apifox.cn)',
         'Content-Type': 'application/json'
     }
-
-    requests.request("POST", url, headers=headers, data=payload)
+    while True:
+        try:
+            r = requests.request("POST", url, headers=headers, data=payload).json()
+            msg = r['msg']
+            status = r['msg']['data'][0]['status']
+            print(f'🎁 WxPusher {status} - {msg}')
+            break
+        except requests.exceptions.ConnectionError as e:
+            print(f'ConnectionError:{e}')
 
 
 def main():
@@ -149,7 +156,7 @@ def main():
         re_back = do_task(COOKIE_CONFIG)
         try:
             SENDKEY = os.getenv('SENDKEY')
-            server_chan(SENDKEY, "Task_job 签到反馈", re_back)
+            server_chan(SENDKEY, "Task_job 签到反馈", '##' + re_back)
         except Exception as server_err:
             msg = f'SERVER酱推送失败{server_err}'
             print(msg)
