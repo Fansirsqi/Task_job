@@ -1,12 +1,31 @@
+## update 2023-09-10
+
+新增一些变量..
+
+> 变量配置表
+
+|Key|Value|COMMENT|
+|:-             |:-                       |-:                        |
+|`HITOKOTO`     | `True`/`False`          | 推送是否启用一言(默认启用) (非必填)|
+|`SMTP_SERVER`  | `smtp.exmail.qq.com:465`| SMTP 发送邮件服务器，形如 `smtp.exmail.qq.com:465` (非必填)|
+|`SMTP_SSL`     | `false`                 |SMTP 发送邮件服务器是否使用 SSL，填写 true 或 false (非必填)|
+|`SMTP_EMAIL`   | `xxxx@qq.com`           |SMTP 收发件邮箱，通知将会由自己发给自己 (非必填)|
+|`SMTP_PASSWORD`| `邮箱授权码`             |SMTP 登录密码，也可能为特殊口令，视具体邮件服务商说明而定 (非必填)|
+|`SMTP_NAME`    | `发件昵称`               | SMTP 收发件人姓名，可随意填写 (非必填)|
+|`SENDKEY`      | `Server酱 的sendkey`|(非必填)|
+|`WX_TOKEN`| `wxpusher的token`|(非必填)|
+|`UIDS`|`需要推送的uid`|(非必填)|
+
+发现一个问题~,仓库不去动他90天还是60天 工作流会自己停掉..
+
 ## update 2023-04-18
 
 - 新增收费暂时没那么严格的`WxPusher`推送，免费额度足够造
 
 - 新增环境变量服务于`WxPusher`
-	- `WX_TOKEN` 
-	
-	- `UIDS` 
-	
+  - `WX_TOKEN`
+
+  - `UIDS`
 
 ![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202304181842177.png)
 
@@ -14,7 +33,7 @@
 
 在你创建应用的过程中，你应该已经看到`appToken`，如果没有保存，可以通过下面的方式重制它。
 
-打开应用的后台https://wxpusher.zjiecode.com/admin/，从左侧菜单栏，找到`appToken`菜单，在这里，你可以重置`appToken`，请注意，重置后，老的`appToken`会立即失效，调用接口会失败。
+打开应用的后台<https://wxpusher.zjiecode.com/admin/，从左侧菜单栏，找到`appToken`菜单，在这里，你可以重置`appToken`，请注意，重置后，老的`appToken`会立即失效，调用接口会失败。>
 
 ![](https://cdn.jsdelivr.net/gh/Fansirsqi/blog-Images/images/202304181838504.png)
 
@@ -41,7 +60,6 @@
 ## 如何配置?
 
 1. `pip install -r .\requirements.txt`
-
 
 2. 参考如下方式配置`COOKIE_CONFIG`变量,`{}`也要带上
 
