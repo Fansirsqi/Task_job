@@ -17,17 +17,27 @@ jobs:
     #    将作业中运行的所有步骤组合在一起。此部分下嵌套的每个项都是单独的操作或 shell 脚本
     steps:
       #     关键字指定此步骤将运行操作。这是一个将存储库签出到运行器上的操作，允许您针对代码运行脚本或其他操作（例如构建和测试工具）。每当工作流针对存储库的代码运行时，都应使用签出操作。
-      - uses: actions/checkout@v3
-      #        此步骤使用操作来安装指定版本的 python（此示例使用 v3.11）。这把这两个命令都放在你的 actions/setup-python@v3 xxx PATH
-      - uses: actions/setup-python@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      
+       #        此步骤使用操作来安装指定版本的 python（此示例使用 v3.11）。这把这两个命令都放在你的 actions/setup-python@v3 xxx PATH
+      - name: Setup python
+        uses: actions/setup-python@v3
         with:
           python-version: '3.11'
+      
       #      关键字告诉作业在运行器上执行命令。在这种情况下，您正在使用安装软件测试包。
-      - run: pip install --upgrade pip
+      - name: Setup python
+        run: pip install --upgrade pip
       #      - run: ifconfig
       #      #      运行一条shell命令试试
-      - run: pip install -r requirements.txt
-      - run: python task.py
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+      
+      - name: Run Script
+        run: python task.py
     #      - run: python PORD_Continuity/APS.py
 
     env:
