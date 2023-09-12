@@ -103,46 +103,23 @@ def smtp(title: str, content: str) -> None:
         print(f"SMTP 邮件 推送失败！{e}")
 
 
-def server_chan(title, context):
+def server_chan(text, desp=''):
     """
     Server酱推送
     Args:
-        title (_type_): _通知标题_
-        context (_type_): _通知内容_
+        text (_type_): _通知标题_
+        desp (_type_): _通知内容_
     """
     if not push_config.get("SENDKEY"):
         print("Server酱 推送失败！未配置 Server酱 SENDKEY")
         return
     print("Server酱 推送中...(*≧︶≦))(￣▽￣* )ゞ")
-    data = {"title": title, "desp": context, "short": "", "channel": "9"}
-    # 动态指定本次推送使用的消息通道，选填。如不指定，
-    # 则使用网站上的消息通道页面设置的通道。
-    # 支持最多两个通道，多个通道值用竖线|隔开。
-    # 比如，同时发送服务号和企业微信应用消息通道，则使用 9|66 。
-    # 通道对应的值如下：
-    # 方糖服务号=9
-    # 企业微信应用消息=66
-    # Bark iOS=8
-    # 企业微信群机器人=1
-    # 钉钉群机器人=2
-    # 飞书群机器人=3
-    # 测试号=0
-    # 自定义=88
-    # PushDeer=18
-    # 官方Android版·β=98
-    headers = {"Content-type": "application/json"}
+
     url = f'https://sctapi.ftqq.com/{push_config.get("SENDKEY")}.send'
-    while True:
-        try:
-            r = requests.post(url=url, headers=headers, json=data).json()
-            print(f"🎁ServerChan推送结果:{r['data']['error']}")
-            # 一般返回 SUCCESS 就是成功了
-            # pushid = r['data']['pushid']
-            # readkey = r['data']['readkey']
-            # print(f'查询推送结果请访问: https://sctapi.ftqq.com/push?id={pushid}&readkey={readkey}')
-            break
-        except requests.exceptions.ConnectionError as e:
-            print(f"ConnectionError:{e}")
+    data = {'text': text, 'desp': desp, 'channel':'9|18'}
+    response = requests.post(url, data=data)
+    print(response.text)
+    return response.text
 
 
 def wx_pusher(title, content):
@@ -227,7 +204,7 @@ def send(title: str, content: str) -> None:
 
 
 def main():
-    send("吾爱Task签到反馈", "吾爱Task签到反馈;BYS")
+    send("吾爱Task签到反馈", "吾爱Task签到反馈-BYS")
 
 
 if __name__ == "__main__":
