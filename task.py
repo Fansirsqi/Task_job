@@ -109,7 +109,7 @@ def main():
         print(COOKIE_CONFIG)
         re_back = do_task(COOKIE_CONFIG)
         # print(re_back)
-        send(re_back, "DEBUG")
+        send(re_back, "吾爱Task签到反馈-BYS")
     except KeyError as wuai_err:
         msg = f"🔴吾爱Token 环境变量获取错误：{wuai_err}"
         print(msg)
