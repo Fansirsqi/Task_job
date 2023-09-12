@@ -12,7 +12,7 @@
 |`SMTP_EMAIL`   | `xxxx@qq.com`           |SMTP 收发件邮箱，通知将会由自己发给自己 (非必填)|
 |`SMTP_PASSWORD`| `邮箱授权码`             |SMTP 登录密码，也可能为特殊口令，视具体邮件服务商说明而定 (非必填)|
 |`SMTP_NAME`    | `发件昵称`               | SMTP 收发件人姓名，可随意填写 (非必填)|
-|`SENDKEY`      | `Server酱 的sendkey`|(非必填)|
+|`SENDKEY`      | `Server酱 的sendkey`|(非必填),默认使用通道9;18|
 |`WX_TOKEN`| `wxpusher的token`|(非必填)|
 |`UIDS`|`需要推送的uid`|(非必填)|
 
