@@ -6,8 +6,8 @@ run-name: ${{ github.actor }} 吾爱论坛签到定时任务
 on:
   #手动触发器
   workflow_dispatch:
-  schedule:
-    - cron: '59 23 * * *' # by https://crontab.guru/every-five-minutes
+  # schedule:    # 删除任务
+  #   - cron: '59 23 * * *' # by https://crontab.guru/every-five-minutes
 #将工作流中运行的所有作业组合在一起
 jobs:
   #  定义该工作的名称

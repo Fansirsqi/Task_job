@@ -81,8 +81,9 @@ def do_task(COOKIE_CONFIG: dict):
             print(log)
             r = requests.get(url3, headers=headers)
             r_data = BeautifulSoup(r.text, "html.parser")
+            print(r_data)
             jx_data = r_data.find("div", id="messagetext").find("p").text
-            # print(jx_data) # 不是进行中的任务
+            print(jx_data)  # 不是进行中的任务
 
             if "您需要先登录才能继续本操作" in jx_data:
                 log = f"🔴账号:{user_name}  Cookie 失效"
@@ -105,7 +106,9 @@ def do_task(COOKIE_CONFIG: dict):
 def main():
     try:
         load_dotenv()
-        COOKIE_CONFIG = eval(os.environ.get("COOKIE_CONFIG"))
+        ck = os.environ.get("COOKIE_CONFIGS")
+        # print(ck)
+        COOKIE_CONFIG = eval(ck)
         print(COOKIE_CONFIG)
         re_back = do_task(COOKIE_CONFIG)
         # print(re_back)
